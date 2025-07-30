@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sushil Chavan - Portfolio</title>
+    <style>
+        /* Apply smooth scrolling and account for fixed header height */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem; /* Adjust this value based on your nav height */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { line-height: 1.6; color: #1f2937; }
+        nav {
+            background: linear-gradient(to right, #1e3a8a, #60a5fa);
+            color: white;
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Added transform to transition */
+        }
+        nav h1:hover {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1); /* More pronounced shadow */
+            transform: scale(1.02); /* Subtle scale effect */
+        }
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            margin-left: 2rem; 
+            font-size: 1.1rem; }
+        nav a:hover { 
+            color: #ffffff;
+            border-bottom: 2px solid #000000; 
+            cursor: pointer;
+            transform: scale(1.08); /* Subtle scale effect */
+            text-shadow: 2px 2px 2px #000000; 
+        }
+        section { padding: 5rem 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        #imge {
+            width: 250px;
+            height: 250px;            
+            border: 2px solid #000000;
+            border-radius: 50%;
+            box-shadow: 0 6px 6px rgb(0, 0, 0);
+            margin-left: 50px;
+            transition: transform 0.3s ease-in-out;
+        }
+        #imge:hover {
+            cursor: pointer;
+            transform: scale(0.8); 
+            width: 350px;
+            height: 350px;
+            border-radius: 40%;
+        }
+        #home {
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            color: white;
+            text-align: center;
+            padding: 8rem 1rem;
+            margin-top: 4rem; /* Adjusted to prevent content from being hidden by fixed nav */
+        }
+        #home h2 {
+            -webkit-text-stroke: 1px rgb(0, 0, 0);
+            color: red;
+            text-shadow: 3px 3px 5px rgb(0, 4, 255); 
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 4px 4px 5px #000000; 
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Added transform to transition */
+        }
+        #home h2:hover {
+            color: red;
+            cursor: pointer;
+            transform: scale(1.08); /* Subtle scale effect */
+            text-shadow: 4px 4px 5px #000000; 
+        }
+        #home p { 
+            -webkit-text-stroke: 0.5px rgb(0, 0, 0);
+            font-size: 1.75rem;
+            margin-bottom: 2rem; 
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        #home p:hover { 
+            cursor: pointer; 
+            text-shadow: 3px 3px 3px #000000; 
+        }
+        #home a { 
+            background: #ffffff; color: #1e40af; padding: 1rem 2rem; border-radius: 9999px; text-decoration: none; font-weight: 600; }
+        #home a:hover { background: #bfdbfe; }
+        h2 { font-size: 2.75rem; text-align: center; margin-bottom: 2.5rem; color: #1e3a8a; }
+        #about { background: #f3f4f6; }
+        #about .content { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; }
+        #about .content > div { flex: 1; min-width: 300px; }
+        #about p { font-size: 1.2rem; color: #4b5563; }
+        #about a { display: inline-block; margin-top: 1.5rem; background: #1e40af; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; text-decoration: none; }
+        #about a:hover { background: #1e3a8a; }
+        #skills { background: #ffffff; }
+        #skills .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        #skills .skill-category {
+            background: #e5e7eb;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        #skills .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 6px rgb(0, 0, 0);
+        }
+        #skills .skill-category h3 {
+            font-size: 1.75rem;
+            color: #1e3a8a;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #skills .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        #skills .skill-item {
+            background: #ffffff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            color: #374151;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: background 0.3s ease-in-out, color 0.3s ease-in-out, border 0.3s ease-in-out; /* Added border to transition */
+            border: 1px solid transparent; /* Initial transparent border */
+        }
+        #skills .skill-item:hover {
+            box-shadow: 0 3px 3px rgb(0, 0, 0);
+            transform: scale(1.08);
+            cursor: pointer;
+            background: #bfdbfe;
+            color: #1e3a8a;
+            border: 1px solid #1e3a8a; /* Border on hover */
+        }
+
+        #projects { background: #f3f4f6; }
+        #projects .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .project {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Added border to transition */
+            border: 1px solid transparent; /* Initial transparent border */
+        }
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgb(0, 0, 0); /* Enhanced shadow on hover */
+            border: 1px solid #1e3a8a; /* Border on hover */
+        }
+        .project img { width: 100%; height: 180px; object-fit: cover; }
+        .project div { padding: 1.5rem; }
+        .project h3 { font-size: 1.5rem; color: #1f2937; margin-bottom: 0.5rem; }
+        .project p { color: #4b5563; }
+        .project a { color: #1e40af; text-decoration: none; }
+        .project a:hover { text-decoration: underline; }
+        #contact { background: #ffffff; }
+        #contact .form-container { max-width: 600px; margin: 0 auto; }
+        #contact input, #contact textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; }
+        #contact button { background: #1e40af; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 9999px; cursor: pointer; }
+        #contact button:hover { background: #1e3a8a; }
+        #contact .social { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
+        #contact .social a { color: #1e40af; font-size: 1.2rem; }
+        #contact .social a:hover { color: #1e3a8a; }
+        footer { background: linear-gradient(to right, #1e3a8a, #60a5fa); color: white; text-align: center; padding: 2rem; }
+        .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 1s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            nav .container { flex-direction: column; gap: 1rem; }
+            nav a { margin: 0 1rem; }
+            #home h2 { font-size: 2.5rem; }
+            #home p { font-size: 1.25rem; }
+            #home { padding: 6rem 1rem; }
+            #about .content { flex-direction: column; }
+            #about .content > div { min-width: unset; width: 100%; }
+            #about img { width: 100%; height: auto; }
+            #skills .category-grid {
+                grid-template-columns: 1fr; /* Stack categories on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1>Sushil Chavan</h1>
+            <div>
+                <a href="#home"><strong>Home</strong></a>
+                <a href="#about"><strong>About</strong></a>
+                <a href="#skills"><strong>Skills</strong></a>
+                <a href="#projects"><strong>Projects</strong></a>
+                <a href="#contact"><strong>Contact</strong></a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="fade-in">
+        <div class="container">
+            <h2>Sushil Chavan</h2>
+            <p>Machine Learning | Data Analytics | Web Developer</p>
+            <a href="#contact">Connect with Me</a>
+        </div>
+    </section>
+
+    <section id="about" class="fade-in">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="content">
+                <div>
+                    <p id="original-summary">
+                        I'm Sushil Chavan, a passionate web developer and AI enthusiast skilled in Django, machine learning, and data visualization tools like Power BI and Tableau.
+                    </p>
+                    <a href="{% static 'files/super resume.pdf' %}" download>Download Resume</a>
+                </div>
+                <div>
+                    <img src="{% static 'images/whatsapp_image.jpg' %}" alt="Sushil Chavan" id="imge">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="fade-in">
+        <div class="container">
+            <h2>My Skills</h2>
+            <div class="category-grid">
+                <div class="skill-category">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">HTML</div>
+                        <div class="skill-item">CSS</div>
+                        <div class="skill-item">JavaScript</div>
+                        <div class="skill-item">Python</div>
+                        <div class="skill-item">C</div>
+                        <div class="skill-item">C++</div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Frameworks & Libraries</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">Django</div>
+                        <div class="skill-item">Flask</div>
+                        <div class="skill-item">Pandas</div>
+                        <div class="skill-item">NumPy</div>
+                        <div class="skill-item">Scikit-learn</div>
+                        <div class="skill-item">Matplotlib</div>
+                        <div class="skill-item">TensorFlow</div>
+                        <div class="skill-item">OpenCV</div>
+                        <div class="skill-item">NLTK</div>
+                        <div class="skill-item">spaCy</div>
+                        <div class="skill-item">Hugging Face</div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Databases</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">MongoDB</div>
+                        <div class="skill-item">MySQL</div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Tools & Platforms</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">GitHub</div>
+                        <div class="skill-item">Power BI</div>
+                        <div class="skill-item">Tableau</div>
+                        <div class="skill-item">Google Colab</div>
+                        <div class="skill-item">VS Code</div>
+                        <div class="skill-item">Jupyter Notebook</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="fade-in">
+        <div class="container">
+            <h2>My Projects</h2>
+            <div class="grid">
+                <div class="project">
+                    <img src="{% static 'images/generate.jpeg' %}" alt="Smart Farming with Drone Imaging">
+                    <div>
+                        <h3>Smart Farming with Drone Imaging</h3>
+                        <p>project analyzes drone images to generate NDVI heatmaps, segmentation maps, and overlayed visuals, providing field health statistics like healthy, moderate, stressed zones, and mean NDVI.</p>
+                        <a href="https://github.com/Sushil-RsP/Smart-Farming-with-Drone-Imaging" target="_blank">View Project</a>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="{% static 'images/data.jpeg' %}" alt="Data Analyst Agent">
+                    <div>
+                        <h3>Data Analyst Agent</h3>
+                        <p>The Data Analyst Agent is an LLM-powered tool using the LLaMA model from Together AI to perform EDA and answer queries on uploaded CSV, Excel, Word, PDF, JPG, and PNG files.</p>
+                        <a href="https://github.com/Sushil-RsP/Data-analyst-agent" target="_blank">View Project</a>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="{% static 'images/catdog.jpeg' %}" alt="DogCat Classifier">
+                    <div>
+                        <h3>DogCat Classifier</h3>
+                        <p>DogCat Classifier is a CNN-based image classification model built with TensorFlow and Python to distinguish between dog and cat images.</p>
+                        <a href="https://github.com/Sushil-RsP/DogCatClassifier" target="_blank">View Project</a>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="{% static 'images/weather.jpeg' %}" alt="Weather Prediction Web App">
+                    <div>
+                        <h3>Weather Prediction Web App</h3>
+                        <p>Weather Prediction Web App is a Django-based application that uses machine learning to forecast weather conditions from user-input data.</p>
+                        <a href="https://github.com/Sushil-RsP/Weather-Prediction-Web-App" target="_blank">View Project</a>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="{% static 'images/car.jpeg' %}" alt="Car Suggestion">
+                    <div>
+                        <h3>Car Suggestion</h3>
+                        <p>Car Suggestion is an ML-powered recommender system built with Django that suggests suitable cars based on user preferences.</p>
+                        <a href="https://github.com/Sushil-RsP/CarSuggestion.github.io" target="_blank">View Project</a>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="{% static 'images/udemy.jpeg' %}" alt="Udemy Analytics">
+                    <div>
+                        <h3>Udemy Analytics</h3>
+                        <p>Udemy Analytics is an interactive dashboard project built using Power BI to visualize and analyze Udemy course data.</p>
+                        <a href="https://github.com/Sushil-RsP/udemy-analytics" target="_blank">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="fade-in">
+        <div class="container">
+            <div class="form-container">
+                <h2>Contact Form</h2>
+                <form method="post">
+                {% csrf_token %}
+                    <input type="text" name="name" placeholder="Name" required value="{{ form.name.value|default_if_none:'' }}">
+                    <input type="email" name="email" placeholder="Email" required value="{{ form.email.value|default_if_none:'' }}">
+                    <textarea name="message" placeholder="Your Message" rows="5" required>{{ form.message.value|default_if_none:'' }}</textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+
+
+                <div class="social">
+                    <a href="https://www.linkedin.com/in/sushil-chavan-506263257/" target="_blank">LinkedIn</a>
+                    <a href="https://github.com/Sushil-RsP" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Sushil Chavan. Built with Passion.</p>
+    </footer>
+{% if success %}
+    <script>
+        alert("Your message has been sent successfully!");
+    </script>
+    {% endif %}
+
+</body>
+</html>
