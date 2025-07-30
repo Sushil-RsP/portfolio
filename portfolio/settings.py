@@ -166,15 +166,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # add for mail
-
+'''
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-''' EMAIL_HOST_USER = 'sushilchavan2468@gmail.com'
-EMAIL_HOST_PASSWORD = 'crujmbzuyntkqzgk'  # your App Password (no spaces) '''
+EMAIL_HOST_USER = 'sushilchavan2468@gmail.com'
+EMAIL_HOST_PASSWORD = 'crujmbzuyntkqzgk'  # your App Password (no spaces) 
+'''
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')          # add because of replace
+'''EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')          # add because of replace
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')'''
+
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG') == 'True'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
