@@ -29,26 +29,71 @@ def contact_view(request):
                 if sendgrid_api_key:
                     # Use SendGrid API (works on Render free tier!)
                     from sendgrid import SendGridAPIClient
-                    from sendgrid.helpers.mail import Mail
+                    from sendgrid.helpers.mail import Mail, Personalization, Email as SGEmail
                     
-                    mail_message = Mail(
-                        from_email=('sushilchavan2468@gmail.com', 'Portfolio Contact Form'),  # Display name added
-                        to_emails='sushilchavan2468@gmail.com',
-                        subject=f'🔔 New Contact Message from {name}',  # Added emoji for visibility
-                        html_content=f'''
-                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                            <h2 style="color: #1e40af;">New Contact Form Submission</h2>
-                            <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                                <p><strong>Name:</strong> {name}</p>
-                                <p><strong>Email:</strong> <a href="mailto:{email}">{email}</a></p>
-                                <p><strong>Message:</strong></p>
-                                <p style="background-color: white; padding: 15px; border-left: 4px solid #1e40af;">{message}</p>
-                            </div>
-                            <p style="color: #6b7280; font-size: 12px;">Reply directly to: {email}</p>
-                        </div>
-                        ''',
-                        reply_to_emails=email  # Set reply-to to sender's email
-                    )
+                    # Create message with better spam score
+                    mail_message = Mail()
+                    mail_message.from_email = SGEmail('sushilchavan2468@gmail.com', 'Sushil Chavan Portfolio')
+                    mail_message.subject = f'Portfolio Contact: {name}'  # Simpler subject, less spammy
+                    mail_message.reply_to = SGEmail(email, name)
+                    
+                    # Add personalization
+                    personalization = Personalization()
+                    personalization.add_to(SGEmail('sushilchavan2468@gmail.com'))
+                    mail_message.add_personalization(personalization)
+                    
+                    # Plain text version (important for spam filters!)
+                    mail_message.add_content(f'''
+New Contact Form Submission
+
+From: {name}
+Email: {email}
+
+Message:
+{message}
+
+---
+Reply to this email to respond directly to {name}.
+                    '''.strip(), 'text/plain')
+                    
+                    # HTML version
+                    mail_message.add_content(f'''
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 30px; margin: 20px 0;">
+        <h2 style="color: #2563eb; margin-top: 0; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+            New Portfolio Contact
+        </h2>
+        
+        <div style="background-color: white; border-radius: 6px; padding: 20px; margin: 20px 0; border-left: 4px solid #2563eb;">
+            <p style="margin: 10px 0;"><strong style="color: #555;">From:</strong> {name}</p>
+            <p style="margin: 10px 0;"><strong style="color: #555;">Email:</strong> <a href="mailto:{email}" style="color: #2563eb; text-decoration: none;">{email}</a></p>
+        </div>
+        
+        <div style="background-color: white; border-radius: 6px; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0;"><strong style="color: #555;">Message:</strong></p>
+            <p style="margin: 0; white-space: pre-wrap; color: #333;">{message}</p>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6; color: #6c757d; font-size: 14px;">
+            <p style="margin: 5px 0;">💡 Click reply to respond directly to {name}</p>
+            <p style="margin: 5px 0;">📧 Sent from your portfolio contact form</p>
+        </div>
+    </div>
+</body>
+</html>
+                    '''.strip(), 'text/html')
+                    
+                    # Disable click tracking and open tracking to reduce spam score
+                    mail_message.tracking_settings = {
+                        'click_tracking': {'enable': False},
+                        'open_tracking': {'enable': False}
+                    }
                     
                     sg = SendGridAPIClient(sendgrid_api_key)
                     response = sg.send(mail_message)
