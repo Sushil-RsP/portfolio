@@ -32,17 +32,23 @@ Message:
                 recipient_list = ['sushilchavan2468@gmail.com']
 
                 # Use EmailMessage to set reply-to
+                from django.conf import settings
                 email_msg = EmailMessage(
                     subject=subject,
                     body=body,
+                    from_email=settings.EMAIL_HOST_USER,  # Add from_email
                     to=recipient_list,
                     headers={'Reply-To': email}  # So you can reply directly to sender
                 )
-                email_msg.send(fail_silently=False)  # Show errors if email fails
+                result = email_msg.send(fail_silently=False)  # Show errors if email fails
+                print(f"Email send result: {result}")  # Log the result
+                print(f"Email sent to: {recipient_list}")  # Confirm recipient
                 
             except Exception as e:
                 # Email failed, but form is saved - that's okay
-                print(f"Email error: {e}")  # This will show in Render logs
+                print(f"EMAIL ERROR: {str(e)}")  # This will show in Render logs
+                import traceback
+                print(f"Full error: {traceback.format_exc()}")
                 pass
             
             return render(request, 'contact.html', {'form': ContactForm(), 'success': True})
