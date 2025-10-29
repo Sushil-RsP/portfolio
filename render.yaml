@@ -7,3 +7,7 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: portfolio.settings
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        sync: false  # Set this in Render dashboard to include your domain

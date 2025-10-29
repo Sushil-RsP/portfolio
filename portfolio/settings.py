@@ -36,7 +36,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temp-key-for-local-de
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'  # Default to True for local development
 
-# ALLOWED_HOSTS is configured later in the file from environment variables
+# ALLOWED_HOSTS configuration
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',  # Add for static files
             ],
         },
     },
