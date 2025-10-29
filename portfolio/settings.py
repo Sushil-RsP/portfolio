@@ -194,6 +194,9 @@ EMAIL_HOST_PASSWORD = 'crujmbzuyntkqzgk'  # your App Password (no spaces)
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')'''
 
 # Email configuration for contact form
+# Note: Render free tier blocks SMTP on port 587
+# Email will only work locally, not on Render
+# Messages are saved to database regardless
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
