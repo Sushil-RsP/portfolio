@@ -202,4 +202,8 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'sushilchavan2468@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'crujmbzuyntkqzgk')
 EMAIL_TIMEOUT = 10  # Add timeout to prevent hanging
 
+# For development, you can use console backend to see emails in terminal
+# Uncomment this line to test email locally:
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 #DEFAULT_FROM_EMAIL = 'sushilchavan2468@gmail.com'
