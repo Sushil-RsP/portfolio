@@ -53,6 +53,8 @@ def contact_view(request):
                     sg = SendGridAPIClient(sendgrid_api_key)
                     response = sg.send(mail_message)
                     print(f"✅ SendGrid email sent! Status: {response.status_code}")
+                    print(f"📧 Response body: {response.body}")
+                    print(f"📋 Response headers: {response.headers}")
                     print(f"✅ Email sent to: sushilchavan2468@gmail.com from: {name} ({email})")
                 else:
                     # Fallback to Gmail SMTP (ONLY works locally, NOT on Render)
@@ -77,6 +79,9 @@ Message:
                     
             except Exception as e:
                 print(f"❌ Email error: {e}")
+                print(f"❌ Error type: {type(e).__name__}")
+                import traceback
+                print(f"❌ Full traceback: {traceback.format_exc()}")
                 pass  # Email failed, but that's okay - message is in database
             
             return render(request, 'contact.html', {'form': ContactForm(), 'success': True})
