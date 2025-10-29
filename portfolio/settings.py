@@ -202,31 +202,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'sushilchavan2468@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'crujmbzuyntkqzgk')
 EMAIL_TIMEOUT = 10  # Add timeout to prevent hanging
 
-# Logging configuration
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
-        'web': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
-
 #DEFAULT_FROM_EMAIL = 'sushilchavan2468@gmail.com'
