@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% csrf_token %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Projects - Sushil Chavan</title>
+    <style>
+        /* Apply smooth scrolling and account for fixed header height */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem; /* Adjust this value based on your nav height */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { line-height: 1.6; color: #1f2937; }
+        nav {
+            background: linear-gradient(to right, #1e3a8a, #60a5fa);
+            color: white;
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+        nav h1 a {
+            color: white;
+            text-decoration: none;
+            font-size: inherit;
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            display: inline-block;
+        }
+        nav h1 a:hover {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1); /* Glow effect */
+            transform: scale(1.02); /* Subtle scale effect */
+            border-bottom: none;
+        }
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            margin-left: 2rem; 
+            font-size: 1.1rem; }
+        nav a:hover { 
+            color: #ffffff;
+            border-bottom: 2px solid #000000;
+            cursor: pointer;
+            transform: scale(1.08); /* Subtle scale effect */
+            text-shadow: 2px 2px 2px #000000; 
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        
+        .projects-hero {
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            color: white;
+            text-align: center;
+            padding: 8rem 1rem 4rem 1rem;
+            margin-top: 4rem;
+        }
+        .projects-hero h1 {
+            -webkit-text-stroke: 1px rgb(0, 0, 0);
+            color: red;
+            text-shadow: 3px 3px 5px rgb(0, 4, 255); 
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 4px 4px 5px #000000; 
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .projects-hero h1:hover {
+            color: red;
+            cursor: pointer;
+            transform: scale(1.08);
+            text-shadow: 4px 4px 5px #000000; 
+        }
+        .projects-hero p {
+            -webkit-text-stroke: 0.5px rgb(0, 0, 0);
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            transition: text-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .projects-hero p:hover { 
+            cursor: pointer; 
+            text-shadow: 3px 3px 3px #000000; 
+        }
+        
+        .projects-section {
+            padding: 4rem 1rem;
+            background: #f3f4f6;
+        }
+        .projects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 3rem;
+        }
+        .project {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Added border to transition */
+            border: 1px solid transparent; /* Initial transparent border */
+        }
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgb(0, 0, 0); /* Enhanced shadow on hover */
+            border: 1px solid #1e3a8a; /* Border on hover */
+        }
+        .project img { width: 100%; height: 180px; object-fit: cover; }
+        .project-content { padding: 1.5rem; }
+        .project h3 { font-size: 1.5rem; color: #1f2937; margin-bottom: 0.5rem; }
+        .project p { color: #4b5563; margin-bottom: 1rem; }
+        .project a { 
+            color: #1e40af; 
+            text-decoration: none; 
+            font-weight: 600;
+        }
+        .project a:hover { 
+            text-decoration: underline; 
+        }
+        
+        footer { 
+            background: linear-gradient(to right, #1e3a8a, #60a5fa); 
+            color: white; 
+            text-align: center; 
+            padding: 2rem; 
+        }
+        .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 1s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        
+        @media (max-width: 768px) {
+            nav .container { 
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(to bottom, #1e3a8a, #60a5fa);
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            nav a { 
+                margin: 0.5rem 0;
+                padding: 0.5rem 1rem;
+                text-align: center;
+            }
+            .projects-hero h1 { font-size: 2.5rem; }
+            .projects-hero p { font-size: 1.25rem; }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1><a href="/">Sushil Chavan</a></h1>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/#home" onclick="closeMenu()"><strong>Home</strong></a>
+                <a href="/#about" onclick="closeMenu()"><strong>About</strong></a>
+                <a href="/#skills" onclick="closeMenu()"><strong>Skills</strong></a>
+                <a href="/#projects" onclick="closeMenu()"><strong>Projects</strong></a>
+                <a href="/#contact" onclick="closeMenu()"><strong>Contact</strong></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="projects-hero fade-in">
+        <div class="container">
+            <h1>All Projects</h1>
+            <p>Explore my complete portfolio of work</p>
+        </div>
+    </div>
+
+    <section class="projects-section fade-in">
+        <div class="container">
+            <div class="projects-grid">
+                <div class="project">
+                    <img src="{% static 'images/ChatGPT Image Oct 29, 2025, 08_45_59 PM.png' %}" alt="LexiMind">
+                    <div class="project-content">
+                        <h3>LexiMind</h3>
+                        <p>AI-powered Flask web app for intelligent legal document analysis. It allows users to paste text or upload PDF judgments to get automated classification and find semantically similar cases using NLP models.</p>
+                        <a href="https://huggingface.co/spaces/Sushil-RsP/LexiMind_" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project">
+                    <img src="{% static 'images/data.jpeg' %}" alt="Data Analyst Agent">
+                    <div class="project-content">
+                        <h3>Data Analyst Agent</h3>
+                        <p>The Data Analyst Agent is an LLM-powered tool using the LLaMA model from Together AI to perform EDA and answer queries on uploaded CSV, Excel, Word, PDF, JPG, and PNG files.</p>
+                        <a href="https://github.com/Sushil-RsP/Data-analyst-agent" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project">
+                    <img src="{% static 'images/catdog.jpeg' %}" alt="DogCat Classifier">
+                    <div class="project-content">
+                        <h3>DogCat Classifier</h3>
+                        <p>DogCat Classifier is a CNN-based image classification model built with TensorFlow and Python to distinguish between dog and cat images.</p>
+                        <a href="https://github.com/Sushil-RsP/DogCatClassifier" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project">
+                    <img src="{% static 'images/weather.jpeg' %}" alt="Weather Prediction Web App">
+                    <div class="project-content">
+                        <h3>Weather Prediction Web App</h3>
+                        <p>Weather Prediction Web App is a Django-based application that uses machine learning to forecast weather conditions from user-input data.</p>
+                        <a href="https://github.com/Sushil-RsP/Weather-Prediction-Web-App" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project">
+                    <img src="{% static 'images/car.jpeg' %}" alt="Car Suggestion">
+                    <div class="project-content">
+                        <h3>Car Suggestion</h3>
+                        <p>Car Suggestion is an ML-powered recommender system built with Django that suggests suitable cars based on user preferences.</p>
+                        <a href="https://github.com/Sushil-RsP/CarSuggestion.github.io" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project">
+                    <img src="{% static 'images/Screenshot 2025-10-29 145617.png' %}" alt="Udemy Analytics">
+                    <div class="project-content">
+                        <h3>Udemy Analytics</h3>
+                        <p>Udemy Analytics is an interactive dashboard project built using Power BI to visualize and analyze Udemy course data.</p>
+                        <a href="https://github.com/Sushil-RsP/udemy-analytics" target="_blank">View Project</a>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <img src="{% static 'images/generate.jpeg' %}" alt="Smart Farming with Drone Imaging">
+                    <div class="project-content">
+                        <h3>Smart Farming with Drone Imaging</h3>
+                        <p>This project analyzes drone images to generate NDVI heatmaps, segmentation maps, and overlayed visuals, providing field health statistics like healthy, moderate, stressed zones, and mean NDVI.</p>
+                        <a href="https://github.com/Sushil-RsP/Smart-Farming-with-Drone-Imaging" target="_blank">View Project</a>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <img src="{% static 'images/Screenshot 2025-10-21 195226.png' %}" alt="Smart Farming with Drone Imaging">
+                    <div class="project-content">
+                        <h3>Pune Zomato Restaurant</h3>
+                        <p>Pune Zomato Restaurant Dashboard is a Power BI project that visualizes Pune’s restaurant data, offering insights into locations, cuisines, delivery trends, ratings, and pricing.</p>
+                        <a href="https://github.com/Sushil-RsP/Pune-Zomato-Restaurant" target="_blank">View Project</a>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <img src="{% static 'images/Screenshot 2025-10-29 213443.png' %}" alt="Smart Farming with Drone Imaging">
+                    <div class="project-content">
+                        <h3>Pizza Sales Report</h3>
+                        <p>Pizza Sales Report Dashboard is an interactive Power BI project that visualizes pizza sales data, providing insights into revenue, orders, popular pizza categories, and size-wise performance.</p>
+                        <a href="https://github.com/Sushil-RsP/Pizza-Sales-Report" target="_blank">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Sushil Chavan. Built with Passion.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (!nav.contains(event.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

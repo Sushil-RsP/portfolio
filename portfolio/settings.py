@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import dj_database_url
 import os
 
 
@@ -32,17 +31,12 @@ DEBUG = True'''
 import os
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temp-key-for-local-dev')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'  # Default to True for local development
 
-''' ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',') '''
-
-ALLOWED_HOSTS = ['portfolio-rbzp.onrender.com']
-
-
-''' ALLOWED_HOSTS = [] '''
+# ALLOWED_HOSTS is configured later in the file from environment variables
 
 
 # Application definition
@@ -98,10 +92,29 @@ WSGI_APPLICATION = 'portfolio.wsgi.application'
     }
 } '''
 
-if os.environ.get('DATABASE_URL'):        # because of replace 
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
-    }
+if os.environ.get('DATABASE_URL'):
+    # Import dj_database_url lazily so that environments without the
+    # package (e.g., a bare local Python install) won't raise
+    # ModuleNotFoundError at import time. If the package isn't
+    # available, fall back to the default sqlite DB.
+    try:
+        import dj_database_url
+
+        DATABASES = {
+            'default': dj_database_url.config(conn_max_age=600)
+        }
+    except Exception:
+        # If dj_database_url can't be imported or fails, warn and
+        # use the local sqlite database instead.
+        import logging
+
+        logging.warning('dj_database_url not available or failed to parse DATABASE_URL; using sqlite3')
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     DATABASES = {
         'default': {
@@ -178,21 +191,7 @@ EMAIL_HOST_PASSWORD = 'crujmbzuyntkqzgk'  # your App Password (no spaces)
 '''EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')          # add because of replace
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')'''
 
-import os
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = os.environ.get('DEBUG') == 'True'
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,192.168.1.5').split(',')
-#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.10']  # Replace with your laptop IP
-'''
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-#EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587)) 
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') '''
-
+# Email configuration for contact form
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))

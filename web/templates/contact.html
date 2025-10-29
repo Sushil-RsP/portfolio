@@ -52,6 +52,23 @@
             transform: scale(1.08); /* Subtle scale effect */
             text-shadow: 2px 2px 2px #000000; 
         }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
         section { padding: 5rem 1rem; }
         .container { max-width: 1200px; margin: 0 auto; }
         #imge {
@@ -60,15 +77,14 @@
             border: 2px solid #000000;
             border-radius: 50%;
             box-shadow: 0 6px 6px rgb(0, 0, 0);
-            margin-left: 50px;
-            transition: transform 0.3s ease-in-out;
+            margin: 0 auto;
+            display: block;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
         #imge:hover {
             cursor: pointer;
-            transform: scale(0.8); 
-            width: 350px;
-            height: 350px;
-            border-radius: 40%;
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         #home {
             background: linear-gradient(to bottom, #2563eb, #1e3a8a);
@@ -181,6 +197,24 @@
         .project p { color: #4b5563; }
         .project a { color: #1e40af; text-decoration: none; }
         .project a:hover { text-decoration: underline; }
+        
+        .more-projects-btn {
+            background: #1e40af;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .more-projects-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
         #contact { background: #ffffff; }
         #contact .form-container { max-width: 600px; margin: 0 auto; }
         #contact input, #contact textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; }
@@ -194,16 +228,51 @@
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 768px) {
-            nav .container { flex-direction: column; gap: 1rem; }
-            nav a { margin: 0 1rem; }
+            nav .container { 
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(to bottom, #1e3a8a, #60a5fa);
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            nav a { 
+                margin: 0.5rem 0;
+                padding: 0.5rem 1rem;
+                text-align: center;
+            }
             #home h2 { font-size: 2.5rem; }
             #home p { font-size: 1.25rem; }
             #home { padding: 6rem 1rem; }
             #about .content { flex-direction: column; }
             #about .content > div { min-width: unset; width: 100%; }
             #about img { width: 100%; height: auto; }
+            #imge {
+                width: 150px;
+                height: 150px;
+                margin: 1rem auto;
+            }
+            #imge:hover {
+                transform: scale(1.05);
+            }
             #skills .category-grid {
                 grid-template-columns: 1fr; /* Stack categories on small screens */
+            }
+            #projects .grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -212,12 +281,17 @@
     <nav>
         <div class="container">
             <h1>Sushil Chavan</h1>
-            <div>
-                <a href="#home"><strong>Home</strong></a>
-                <a href="#about"><strong>About</strong></a>
-                <a href="#skills"><strong>Skills</strong></a>
-                <a href="#projects"><strong>Projects</strong></a>
-                <a href="#contact"><strong>Contact</strong></a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#home" onclick="closeMenu()"><strong>Home</strong></a>
+                <a href="#about" onclick="closeMenu()"><strong>About</strong></a>
+                <a href="#skills" onclick="closeMenu()"><strong>Skills</strong></a>
+                <a href="#projects" onclick="closeMenu()"><strong>Projects</strong></a>
+                <a href="#contact" onclick="closeMenu()"><strong>Contact</strong></a>
             </div>
         </div>
     </nav>
@@ -238,10 +312,10 @@
                     <p id="original-summary">
                         I'm Sushil Chavan, a passionate web developer and AI enthusiast skilled in Django, machine learning, and data visualization tools like Power BI and Tableau.
                     </p>
-                    <a href="{% static 'files/super resume.pdf' %}" download>Download Resume</a>
+                    <a href="{% static 'files/Sushil Chavan Resume.pdf' %}" download>Download Resume</a>
                 </div>
                 <div>
-                    <img src="{% static 'images/whatsapp_image.jpg' %}" alt="Sushil Chavan" id="imge">
+                    <img src="{% static 'images/WhatsApp Image 2024-10-26 at 17.22.21_7fdd9591-removebg-preview (1).png' %}" alt="Sushil Chavan" id="imge">
                 </div>
             </div>
         </div>
@@ -270,6 +344,7 @@
                         <div class="skill-item">Pandas</div>
                         <div class="skill-item">NumPy</div>
                         <div class="skill-item">Scikit-learn</div>
+                        <div class="skill-item">Seaborn</div>
                         <div class="skill-item">Matplotlib</div>
                         <div class="skill-item">TensorFlow</div>
                         <div class="skill-item">OpenCV</div>
@@ -305,11 +380,11 @@
             <h2>My Projects</h2>
             <div class="grid">
                 <div class="project">
-                    <img src="{% static 'images/generate.jpeg' %}" alt="Smart Farming with Drone Imaging">
+                    <img src="{% static 'images/ChatGPT Image Oct 29, 2025, 08_45_59 PM.png' %}" alt="Smart Farming with Drone Imaging">
                     <div>
-                        <h3>Smart Farming with Drone Imaging</h3>
-                        <p>project analyzes drone images to generate NDVI heatmaps, segmentation maps, and overlayed visuals, providing field health statistics like healthy, moderate, stressed zones, and mean NDVI.</p>
-                        <a href="https://github.com/Sushil-RsP/Smart-Farming-with-Drone-Imaging" target="_blank">View Project</a>
+                        <h3>LexiMind</h3>
+                        <p>AI-powered Flask web app for intelligent legal document analysis. It allows users to paste text or upload PDF judgments to get automated classification and find semantically similar cases using NLP models.</p>
+                        <a href="https://huggingface.co/spaces/Sushil-RsP/LexiMind_" target="_blank">View Project</a>
                     </div>
                 </div>
                 <div class="project">
@@ -345,13 +420,16 @@
                     </div>
                 </div>
                 <div class="project">
-                    <img src="{% static 'images/udemy.jpeg' %}" alt="Udemy Analytics">
+                    <img src="{% static 'images/Screenshot 2025-10-29 145617.png' %}" alt="Udemy Analytics">
                     <div>
                         <h3>Udemy Analytics</h3>
                         <p>Udemy Analytics is an interactive dashboard project built using Power BI to visualize and analyze Udemy course data.</p>
                         <a href="https://github.com/Sushil-RsP/udemy-analytics" target="_blank">View Project</a>
                     </div>
                 </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="/projects" class="more-projects-btn">More Projects</a>
             </div>
         </div>
     </section>
@@ -384,7 +462,30 @@
     <script>
         alert("Your message has been sent successfully!");
     </script>
-    {% endif %}
+{% endif %}
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (!nav.contains(event.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
 
 </body>
 </html>
