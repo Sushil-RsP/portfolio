@@ -32,23 +32,28 @@ def contact_view(request):
                     from sendgrid.helpers.mail import Mail
                     
                     mail_message = Mail(
-                        from_email='sushilchavan2468@gmail.com',  # Must be verified in SendGrid
+                        from_email=('sushilchavan2468@gmail.com', 'Portfolio Contact Form'),  # Display name added
                         to_emails='sushilchavan2468@gmail.com',
-                        subject=f'New Contact Message from {name}',
+                        subject=f'🔔 New Contact Message from {name}',  # Added emoji for visibility
                         html_content=f'''
-                        <h3>New Contact Form Submission</h3>
-                        <p><strong>Name:</strong> {name}</p>
-                        <p><strong>Email:</strong> {email}</p>
-                        <p><strong>Message:</strong></p>
-                        <p>{message}</p>
-                        <hr>
-                        <p><small>Reply to: {email}</small></p>
-                        '''
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <h2 style="color: #1e40af;">New Contact Form Submission</h2>
+                            <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                <p><strong>Name:</strong> {name}</p>
+                                <p><strong>Email:</strong> <a href="mailto:{email}">{email}</a></p>
+                                <p><strong>Message:</strong></p>
+                                <p style="background-color: white; padding: 15px; border-left: 4px solid #1e40af;">{message}</p>
+                            </div>
+                            <p style="color: #6b7280; font-size: 12px;">Reply directly to: {email}</p>
+                        </div>
+                        ''',
+                        reply_to_emails=email  # Set reply-to to sender's email
                     )
                     
                     sg = SendGridAPIClient(sendgrid_api_key)
                     response = sg.send(mail_message)
                     print(f"✅ SendGrid email sent! Status: {response.status_code}")
+                    print(f"✅ Email sent to: sushilchavan2468@gmail.com from: {name} ({email})")
                 else:
                     # Fallback to Gmail SMTP (ONLY works locally, NOT on Render)
                     print("⚠️ No SendGrid key found, trying Gmail SMTP (won't work on Render)")
