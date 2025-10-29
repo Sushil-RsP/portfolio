@@ -90,10 +90,10 @@ Reply to this email to respond directly to {name}.
                     '''.strip(), 'text/html')
                     
                     # Disable click tracking and open tracking to reduce spam score
-                    mail_message.tracking_settings = {
-                        'click_tracking': {'enable': False},
-                        'open_tracking': {'enable': False}
-                    }
+                    from sendgrid.helpers.mail import TrackingSettings, ClickTracking, OpenTracking
+                    mail_message.tracking_settings = TrackingSettings()
+                    mail_message.tracking_settings.click_tracking = ClickTracking(False, False)
+                    mail_message.tracking_settings.open_tracking = OpenTracking(False)
                     
                     sg = SendGridAPIClient(sendgrid_api_key)
                     response = sg.send(mail_message)
